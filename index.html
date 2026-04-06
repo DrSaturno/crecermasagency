@@ -86,7 +86,7 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 2000;
             padding: 14px 40px;
             display: flex;
             justify-content: space-between;
@@ -1214,7 +1214,7 @@
                 list-style: none;
                 transition: left 0.35s cubic-bezier(0.4,0,0.2,1);
                 overflow-y: auto;
-                z-index: 998;
+                z-index: 1500;
                 border-top: 1px solid rgba(0,180,255,0.15);
             }
             .navbar-menu.open { left: 0; }
@@ -1248,7 +1248,7 @@
             }
 
             /* ── Hamburger ── */
-            .menu-toggle { display: flex; z-index: 1001; position: relative; }
+            .menu-toggle { display: flex; z-index: 2001; position: relative; }
             .menu-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
             .menu-toggle.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
             .menu-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
