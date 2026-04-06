@@ -692,6 +692,10 @@
             gap: 24px;
             margin-top: 0;
         }
+        @media (max-width: 768px) {
+            .impact-stats { grid-template-columns: 1fr !important; max-width: 340px; margin: 0 auto; }
+            .wa-float { bottom: 90px; }
+        }
         .impact-stat {
             text-align: center;
             padding: 36px 24px;
@@ -1332,11 +1336,141 @@
             .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
             .final-cta h2 { font-size: 1.7rem; }
         }
+        /* ── CUSTOM CURSOR ── */
+        @media (pointer: fine) {
+            * { cursor: none !important; }
+            .cursor-dot {
+                position: fixed;
+                width: 8px; height: 8px;
+                background: var(--cyan);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99999;
+                transform: translate(-50%, -50%);
+                transition: transform 0.1s, background 0.2s, width 0.2s, height 0.2s;
+                mix-blend-mode: screen;
+            }
+            .cursor-ring {
+                position: fixed;
+                width: 36px; height: 36px;
+                border: 1.5px solid rgba(0,180,255,0.5);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 99998;
+                transform: translate(-50%, -50%);
+                transition: transform 0.18s ease, width 0.2s, height 0.2s, border-color 0.2s;
+            }
+            body.cursor-hover .cursor-dot { width: 12px; height: 12px; background: var(--yellow); }
+            body.cursor-hover .cursor-ring { width: 52px; height: 52px; border-color: rgba(255,215,0,0.5); }
+        }
+
+        /* ── SCROLL INDICATOR ── */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 36px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            z-index: 3;
+            opacity: 0.7;
+        }
+        .scroll-indicator span {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.5);
+        }
+        .scroll-arrow {
+            width: 24px; height: 24px;
+            border-right: 2px solid rgba(0,180,255,0.7);
+            border-bottom: 2px solid rgba(0,180,255,0.7);
+            transform: rotate(45deg);
+            animation: scroll-bounce 1.6s ease-in-out infinite;
+        }
+        @keyframes scroll-bounce {
+            0%, 100% { opacity: 0.3; transform: rotate(45deg) translateY(-4px); }
+            50% { opacity: 1; transform: rotate(45deg) translateY(4px); }
+        }
+
+        /* ── STICKY MOBILE CTA ── */
+        .sticky-cta {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .sticky-cta {
+                display: flex;
+                position: fixed;
+                bottom: 0; left: 0; right: 0;
+                z-index: 9000;
+                padding: 12px 16px 20px;
+                background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.95) 30%);
+                backdrop-filter: blur(8px);
+                justify-content: center;
+                transform: translateY(100%);
+                transition: transform 0.4s ease;
+            }
+            .sticky-cta.visible {
+                transform: translateY(0);
+            }
+            .sticky-cta a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                width: 100%;
+                max-width: 400px;
+                padding: 16px 24px;
+                background: linear-gradient(135deg, var(--blue), var(--cyan));
+                color: white;
+                font-weight: 700;
+                font-size: 1rem;
+                border-radius: 14px;
+                text-decoration: none;
+                box-shadow: 0 4px 24px rgba(0,87,184,0.5);
+                letter-spacing: 0.2px;
+            }
+            .sticky-cta a svg {
+                width: 20px; height: 20px;
+                fill: white;
+                flex-shrink: 0;
+            }
+        }
+
+        /* ── WAVE DIVIDERS ── */
+        .wave-divider {
+            display: block;
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            margin: 0;
+        }
+        .wave-divider svg {
+            display: block;
+            width: 100%;
+        }
+        /* hide old flat dividers */
+        .divider { display: none; }
+
     </style>
 </head>
 <body>
 
 <canvas id="particles-canvas"></canvas>
+
+<!-- Custom cursor (desktop only) -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Sticky CTA mobile -->
+<div class="sticky-cta" id="stickyCta">
+    <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20automatizar%20mi%20negocio%20con%20IA" target="_blank">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825.737 5.607 2.137 8.048L0 32l7.933-2.127A15.95 15.95 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.373 19.503c-.317-.159-1.866-.921-2.155-1.026-.289-.105-.499-.159-.709.159s-.815 1.026-.999 1.236c-.184.21-.367.237-.684.079-1.866-.933-3.088-1.663-4.314-3.771-.323-.555.323-.516.923-1.719.1-.21.05-.394-.025-.554-.075-.159-.709-1.709-.971-2.34-.256-.615-.517-.531-.709-.541-.184-.009-.394-.011-.604-.011s-.554.079-.844.394c-.289.316-1.105 1.078-1.105 2.628s1.131 3.049 1.289 3.259c.159.21 2.237 3.417 5.417 4.794 2.006.869 2.799.934 3.802.788.617-.091 1.866-.763 2.128-1.5.262-.737.262-1.368.184-1.5-.079-.132-.289-.21-.604-.368z"/></svg>
+        Hablá con un experto ahora
+    </a>
+</div>
 
 <!-- ── NAVBAR ── -->
 <nav class="navbar" id="navbar">
@@ -1373,6 +1507,10 @@
             <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20automatizar%20mi%20negocio%20con%20IA" target="_blank" class="btn-primary">Automatizá tu negocio hoy →</a>
             <a href="#servicios" class="btn-secondary">Ver servicios</a>
         </div>
+    </div>
+    <div class="scroll-indicator">
+        <div class="scroll-arrow"></div>
+        <span>scroll</span>
     </div>
 </section>
 
@@ -1596,19 +1734,19 @@
         </div>
         <div class="impact-stats">
             <div class="impact-stat reveal">
-                <span class="impact-stat-number">+300%</span>
+                <span class="impact-stat-number" data-target="300" data-prefix="+" data-suffix="%">+300%</span>
                 <div class="impact-stat-desc">Aumento en respuesta a leads en las primeras 48hs</div>
             </div>
             <div class="impact-stat reveal">
-                <span class="impact-stat-number">-68%</span>
+                <span class="impact-stat-number" data-target="68" data-prefix="-" data-suffix="%">-68%</span>
                 <div class="impact-stat-desc">Reducción de tareas manuales repetitivas</div>
             </div>
             <div class="impact-stat reveal">
-                <span class="impact-stat-number">3.2x</span>
+                <span class="impact-stat-number" data-target="32" data-prefix="" data-suffix="x" data-decimal="10">3.2x</span>
                 <div class="impact-stat-desc">ROI promedio en los primeros 90 días</div>
             </div>
             <div class="impact-stat reveal">
-                <span class="impact-stat-number">24/7</span>
+                <span class="impact-stat-number" data-static="true">24/7</span>
                 <div class="impact-stat-desc">Atención automática sin intervención humana</div>
             </div>
         </div>
@@ -2029,28 +2167,77 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     });
 });
 
-// ── COUNTER ANIMATION
-function animateCounter(el, target, suffix) {
-    let start = 0;
-    const duration = 1800;
-    const step = (timestamp) => {
-        if (!start) start = timestamp;
-        const progress = Math.min((timestamp - start) / duration, 1);
-        const val = Math.floor(progress * target);
-        el.textContent = (suffix === '%' && val > 0 ? (el.dataset.prefix || '') + val + suffix : (el.dataset.prefix || '') + val + suffix);
-        if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-}
-
-const statObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-        if (e.isIntersecting) {
+// ── ANIMATED COUNTERS
+(function() {
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+    const statObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (!e.isIntersecting) return;
             statObserver.unobserve(e.target);
+            const el = e.target;
+            if (el.dataset.static) return;
+            const target  = parseInt(el.dataset.target);
+            const prefix  = el.dataset.prefix  || '';
+            const suffix  = el.dataset.suffix  || '';
+            const decimal = parseInt(el.dataset.decimal || '1');
+            const duration = 1800;
+            let startTs = null;
+            function step(ts) {
+                if (!startTs) startTs = ts;
+                const progress = Math.min((ts - startTs) / duration, 1);
+                const val = easeOut(progress) * target;
+                const display = decimal > 1 ? (val / decimal).toFixed(1) : Math.floor(val);
+                el.textContent = prefix + display + suffix;
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('.impact-stat-number').forEach(el => statObserver.observe(el));
+})();
+
+// ── CUSTOM CURSOR
+(function() {
+    if (window.matchMedia('(pointer: fine)').matches) {
+        const dot  = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        if (!dot || !ring) return;
+        let mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', function(e) {
+            mx = e.clientX; my = e.clientY;
+            dot.style.left = mx + 'px';
+            dot.style.top  = my + 'px';
+        });
+        (function animRing() {
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
+            ring.style.left = rx + 'px';
+            ring.style.top  = ry + 'px';
+            requestAnimationFrame(animRing);
+        })();
+        document.querySelectorAll('a, button, .faq-q, .service-card, .pain-card').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+        });
+    }
+})();
+
+// ── STICKY MOBILE CTA
+(function() {
+    const cta = document.getElementById('stickyCta');
+    if (!cta) return;
+    let shown = false;
+    window.addEventListener('scroll', function() {
+        const scrolled = window.scrollY > window.innerHeight * 0.6;
+        // hide near bottom
+        const nearBottom = (window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100;
+        if (scrolled && !nearBottom) {
+            cta.classList.add('visible');
+        } else {
+            cta.classList.remove('visible');
         }
-    });
-}, { threshold: 0.5 });
-document.querySelectorAll('.impact-stat-number').forEach(el => statObserver.observe(el));
+    }, { passive: true });
+})();
 </script>
 </body>
 </html>
