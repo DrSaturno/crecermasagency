@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrecerMas.Agency - Automatización con IA</title>
+    <link rel="icon" type="image/png" href="imagen/favicon.png">
+    <link rel="apple-touch-icon" href="imagen/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #000000;
+            --dark: #080810;
+            --dark2: #0d0d1a;
+            --blue: #0057B8;
+            --blue-light: #1a6fd4;
+            --cyan: #00B4FF;
+            --cyan-glow: rgba(0,180,255,0.2);
+            --yellow: #FFD700;
+            --yellow-glow: rgba(255,215,0,0.2);
+            --white: #FFFFFF;
+            --gray: #8899aa;
+            --card-bg: rgba(255,255,255,0.04);
+            --card-border: rgba(0,180,255,0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* ── PARTICLES CANVAS ── */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        /* ── SCROLL ANIMATIONS ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: transparent;
+            border-bottom: 1px solid rgba(0,180,255,0.1);
+            transition: all 0.3s;
+        }
+        .navbar.scrolled {
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .navbar-logo img {
+            height: 38px;
+            width: auto;
+        }
+        .navbar-logo-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--white);
+            letter-spacing: -0.5px;
+        }
+        .navbar-logo-text span {
+            color: var(--cyan);
+        }
+        .navbar-menu {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+        .navbar-menu a {
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            letter-spacing: 0.3px;
+        }
+        .navbar-menu a:hover { color: var(--cyan); }
+        .navbar-cta {
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            color: white !important;
+            padding: 10px 22px !important;
+            border-radius: 8px !important;
+            font-weight: 600 !important;
+            font-size: 0.85rem !important;
+            transition: all 0.3s !important;
+            box-shadow: 0 0 20px rgba(0,180,255,0.3);
+        }
+        .navbar-cta:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 30px rgba(0,180,255,0.5) !important;
+        }
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            width: 26px;
+            height: 2px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            text-align: left;
+            padding: 220px 60px 80px;
+            position: relative;
+            overflow: hidden;
+            background: var(--black);
+        }
+        .hero-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.8;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 1;
+        }
+        .hero-glow {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,87,184,0.3) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            animation: pulse-glow 4s ease-in-out infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: translate(-50%,-50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%,-50%) scale(1.1); }
+        }
+        .hero-content {
+            max-width: 860px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,180,255,0.1);
+            border: 1px solid rgba(0,180,255,0.3);
+            border-radius: 50px;
+            padding: 7px 18px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--cyan);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+            backdrop-filter: blur(10px);
+        }
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--cyan);
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .hero h1 {
+            font-size: clamp(2.4rem, 5.5vw, 4rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -1.5px;
+        }
+        .hero h1 .highlight-blue {
+            color: var(--yellow);
+        }
+        .hero h1 .highlight-yellow {
+            color: var(--yellow);
+        }
+        .hero-sub {
+            font-size: 1.15rem;
+            color: rgba(255,255,255,0.7);
+            max-width: 600px;
+            margin: 0 0 40px;
+            font-weight: 400;
+            line-height: 1.7;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            color: white;
+            padding: 16px 36px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 4px 30px rgba(0,180,255,0.4);
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(0,180,255,0.6);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            padding: 16px 36px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.07);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+        }
+        .hero-astronaut {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            align-items: center;
+        }
+        .hero-astronaut img {
+            height: 160px;
+            width: auto;
+            filter: drop-shadow(0 0 30px rgba(0,180,255,0.5));
+            animation: float 6s ease-in-out infinite;
+        }
+        .hero-astronaut img:nth-child(2) {
+            animation-delay: -3s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-18px); }
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 64px;
+            flex-wrap: wrap;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat-number {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--cyan);
+            display: block;
+        }
+        .hero-stat-label {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── SECTION BASE ── */
+        section { position: relative; z-index: 1; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .section-pad { padding: 100px 0; }
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--cyan);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .section-title {
+            font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+        .section-title .accent-yellow { color: var(--yellow); }
+        .section-title .accent-cyan {
+            color: var(--yellow);
+        }
+        .section-desc {
+            color: rgba(255,255,255,0.6);
+            font-size: 1.05rem;
+            max-width: 600px;
+            line-height: 1.7;
+            margin-top: 14px;
+        }
+
+        /* ── DIVIDER ── */
+        .divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,180,255,0.3), transparent);
+            margin: 0;
+        }
+
+        /* ── PAIN SECTION ── */
+        .pain-section {
+            background: linear-gradient(180deg, var(--black) 0%, var(--dark) 100%);
+            padding: 100px 0;
+        }
+        .pain-header { text-align: center; margin-bottom: 64px; }
+        .pain-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .pain-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .pain-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .pain-card:hover::before { opacity: 1; }
+        .pain-card:hover {
+            border-color: rgba(0,180,255,0.35);
+            background: rgba(0,180,255,0.06);
+            transform: translateY(-4px);
+        }
+        .pain-emoji {
+            font-size: 2rem;
+            margin-bottom: 14px;
+            display: block;
+        }
+        .pain-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--white);
+        }
+        .pain-card p {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.6;
+        }
+
+        /* ── METHODOLOGY ── */
+        .methodology {
+            padding: 100px 0;
+            background: var(--dark);
+        }
+        .methodology-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .method-visual {
+            position: relative;
+        }
+        .method-img {
+            width: 100%;
+            max-width: 440px;
+            filter: drop-shadow(0 20px 60px rgba(0,87,184,0.5));
+        }
+        .method-badge {
+            position: absolute;
+            bottom: -20px;
+            right: 0;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border-radius: 16px;
+            padding: 20px 24px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 40px rgba(0,87,184,0.4);
+        }
+        .method-badge span {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .method-steps {
+            margin-top: 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .method-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 18px 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .method-step:hover {
+            border-color: rgba(0,180,255,0.4);
+            background: rgba(0,180,255,0.05);
+        }
+        .method-step-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .method-step-text h4 {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+        .method-step-text p {
+            font-size: 0.83rem;
+            color: rgba(255,255,255,0.55);
+        }
+
+        /* ── IMAGINE SECTION ── */
+        .imagine-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(0,87,184,0.15) 0%, var(--black) 50%, rgba(0,180,255,0.08) 100%);
+            border-top: 1px solid rgba(0,180,255,0.1);
+            border-bottom: 1px solid rgba(0,180,255,0.1);
+        }
+        .imagine-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .imagine-text .big-quote {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 32px;
+            color: var(--white);
+        }
+        .imagine-text .big-quote em {
+            font-style: normal;
+            color: var(--yellow);
+        }
+        .imagine-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            list-style: none;
+        }
+        .imagine-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.8);
+        }
+        .imagine-list li::before {
+            content: '✦';
+            color: var(--cyan);
+            font-size: 0.7rem;
+            flex-shrink: 0;
+        }
+        .imagine-list li strong { color: var(--white); }
+        .imagine-visual {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .imagine-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .imagine-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(0,180,255,0.4);
+        }
+        .imagine-card:first-child {
+            grid-column: span 2;
+            background: linear-gradient(135deg, rgba(0,87,184,0.2), rgba(0,180,255,0.1));
+            border-color: rgba(0,180,255,0.3);
+        }
+        .imagine-card-icon { font-size: 2rem; margin-bottom: 10px; }
+        .imagine-card h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+        .imagine-card p { font-size: 0.78rem; color: rgba(255,255,255,0.5); }
+
+        /* ── SERVICES ── */
+        .services-section {
+            padding: 100px 0;
+            background: linear-gradient(rgba(13, 13, 26, 0.85), rgba(13, 13, 26, 0.85)), url('imagen/fondo1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        .services-header { text-align: center; margin-bottom: 64px; }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .service-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px 28px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 100%, rgba(0,180,255,0.08) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .service-card:hover::after { opacity: 1; }
+        .service-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(0,180,255,0.4);
+            box-shadow: 0 20px 60px rgba(0,87,184,0.25);
+        }
+        .service-icon-wrap {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,87,184,0.4);
+        }
+        .service-card h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--white);
+        }
+        .service-card p {
+            font-size: 0.87rem;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.65;
+        }
+        .service-tag {
+            display: inline-block;
+            margin-top: 14px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0,180,255,0.1);
+            color: var(--cyan);
+            border: 1px solid rgba(0,180,255,0.2);
+        }
+
+        /* ── IMPACT BANNER ── */
+        .impact-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #000814 0%, #001a3a 50%, #000814 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .impact-section::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 400px;
+            background: radial-gradient(ellipse, rgba(0,87,184,0.25) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .impact-header { text-align: center; margin-bottom: 64px; }
+        .impact-header .big-statement {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            line-height: 1.15;
+            letter-spacing: -1px;
+        }
+        .impact-header .big-statement .highlight {
+            color: var(--yellow);
+        }
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 0;
+        }
+        .impact-stat {
+            text-align: center;
+            padding: 36px 24px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(0,180,255,0.12);
+            border-radius: 20px;
+            transition: all 0.4s;
+        }
+        .impact-stat:hover {
+            border-color: rgba(0,180,255,0.4);
+            background: rgba(0,87,184,0.1);
+            transform: scale(1.03);
+        }
+        .impact-stat-number {
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--yellow);
+            display: block;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        .impact-stat-desc {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            font-weight: 500;
+        }
+
+        /* ── TESTIMONIALS ── */
+        .testimonials-section {
+            padding: 100px 0;
+            background: var(--black);
+        }
+        .testimonials-header { text-align: center; margin-bottom: 64px; }
+        .testimonials-track {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 32px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            position: relative;
+        }
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            right: 28px;
+            font-size: 5rem;
+            color: rgba(0,180,255,0.1);
+            font-family: serif;
+            line-height: 1;
+        }
+        .testimonial-card:hover {
+            border-color: rgba(0,180,255,0.35);
+            transform: translateY(-4px);
+        }
+        .testimonial-stars {
+            color: var(--yellow);
+            font-size: 0.9rem;
+            margin-bottom: 14px;
+            letter-spacing: 2px;
+        }
+        .testimonial-text {
+            font-size: 0.93rem;
+            color: rgba(255,255,255,0.75);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .author-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .author-name {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .author-role {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.45);
+        }
+
+        /* ── INVESTMENT / CTA MID ── */
+        .investment-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(0,87,184,0.2), rgba(0,180,255,0.1), rgba(0,0,0,0));
+            border-top: 1px solid rgba(0,180,255,0.15);
+            border-bottom: 1px solid rgba(0,180,255,0.15);
+        }
+        .investment-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .investment-text h2 {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+            margin-bottom: 20px;
+        }
+        .investment-text h2 em {
+            font-style: normal;
+            color: var(--yellow);
+        }
+        .investment-text p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.65);
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+        .investment-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+        .inv-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.75);
+        }
+        .inv-feature-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--cyan);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .investment-visual {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+        }
+        .investment-visual h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .investment-visual .tag-line {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 28px;
+        }
+        .investment-visual .price-box {
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .price-box .price-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+            margin-bottom: 6px;
+        }
+        .price-box .price-main {
+            font-size: 2.4rem;
+            font-weight: 900;
+        }
+        .price-box .price-sub {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* ── WHY US ── */
+        .whyus-section {
+            padding: 100px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('imagen/fondo2.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+        .whyus-header { text-align: center; margin-bottom: 64px; }
+        .whyus-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        .whyus-card {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            padding: 28px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+        .whyus-card:hover {
+            border-color: rgba(0,180,255,0.4);
+            background: rgba(0,87,184,0.07);
+            transform: translateY(-3px);
+        }
+        .whyus-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(0,87,184,0.3), rgba(0,180,255,0.2));
+            border: 1px solid rgba(0,180,255,0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .whyus-card h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .whyus-card p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.55);
+            line-height: 1.6;
+        }
+
+        /* ── FAQ ── */
+        .faq-section {
+            padding: 100px 0;
+            background: var(--black);
+        }
+        .faq-header { text-align: center; margin-bottom: 64px; }
+        .faq-list { max-width: 780px; margin: 0 auto; }
+        .faq-item {
+            border: 1px solid rgba(0,180,255,0.12);
+            border-radius: 14px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            background: var(--card-bg);
+            transition: border-color 0.3s;
+        }
+        .faq-item:hover { border-color: rgba(0,180,255,0.3); }
+        .faq-item.active { border-color: rgba(0,180,255,0.4); }
+        .faq-q {
+            padding: 22px 26px;
+            font-weight: 600;
+            font-size: 0.97rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            transition: background 0.3s;
+        }
+        .faq-q:hover { background: rgba(0,180,255,0.04); }
+        .faq-toggle {
+            width: 28px;
+            height: 28px;
+            background: rgba(0,180,255,0.1);
+            border: 1px solid rgba(0,180,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: var(--cyan);
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: transform 0.3s, background 0.3s;
+        }
+        .faq-item.active .faq-toggle {
+            transform: rotate(45deg);
+            background: var(--cyan);
+            color: var(--black);
+        }
+        .faq-a {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            line-height: 1.7;
+            padding: 0 26px;
+        }
+        .faq-item.active .faq-a {
+            max-height: 400px;
+            padding: 0 26px 22px;
+        }
+
+        /* ── URGENCY ── */
+        .urgency-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #000814, rgba(0,87,184,0.2), #000814);
+        }
+        .urgency-inner {
+            max-width: 780px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 56px 48px;
+            background: rgba(0,87,184,0.08);
+            border: 1px solid rgba(0,180,255,0.25);
+            border-radius: 28px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        .urgency-inner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+        }
+        .urgency-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--yellow);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 24px;
+        }
+        .urgency-badge::before {
+            content: '⚡';
+        }
+        .urgency-inner h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+        .urgency-inner p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.65);
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+        .urgency-spots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 32px;
+        }
+        .spot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--cyan);
+            opacity: 0.3;
+        }
+        .spot.taken {
+            background: var(--gray);
+            opacity: 1;
+        }
+        .spot.last {
+            background: var(--yellow);
+            opacity: 1;
+            box-shadow: 0 0 12px var(--yellow);
+            animation: blink 1.2s ease-in-out infinite;
+        }
+
+        /* ── FINAL CTA ── */
+        .final-cta {
+            padding: 120px 0;
+            text-align: center;
+            background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,87,184,0.25) 0%, transparent 70%),
+                        var(--black);
+        }
+        .final-cta h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            max-width: 700px;
+            margin: 0 auto 20px;
+        }
+        .final-cta h2 em {
+            font-style: normal;
+            color: var(--yellow);
+        }
+        .final-cta p {
+            font-size: 1.05rem;
+            color: rgba(255,255,255,0.6);
+            max-width: 520px;
+            margin: 0 auto 48px;
+            line-height: 1.7;
+        }
+        .final-cta-logo {
+            margin-top: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            opacity: 0.5;
+        }
+        .final-cta-logo img { height: 36px; filter: brightness(0) invert(1); }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--dark);
+            border-top: 1px solid rgba(0,180,255,0.1);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .footer-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .footer-logo img { height: 30px; }
+        .footer-logo-text {
+            font-size: 1rem;
+            font-weight: 800;
+            color: white;
+        }
+        .footer-logo-text span { color: var(--cyan); }
+        .footer-tagline {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 0.5px;
+        }
+        .footer-cert {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.25);
+            margin-top: 4px;
+        }
+
+        /* ── WHATSAPP FLOAT ── */
+        .wa-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            width: 58px;
+            height: 58px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(37,211,102,0.5);
+            z-index: 999;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        .wa-float:hover {
+            transform: scale(1.12);
+            box-shadow: 0 8px 30px rgba(37,211,102,0.7);
+        }
+        .wa-float svg { width: 30px; height: 30px; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1024px) {
+            .methodology-inner,
+            .imagine-inner,
+            .investment-inner { grid-template-columns: 1fr; gap: 48px; }
+            .method-visual { display: flex; justify-content: center; }
+            .pain-grid,
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .impact-stats { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-track { grid-template-columns: repeat(2, 1fr); }
+            .whyus-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .navbar { padding: 14px 20px; }
+            .navbar-menu {
+                position: fixed;
+                top: 70px; left: -100%;
+                width: 100%; height: calc(100vh - 70px);
+                background: rgba(0,0,0,0.95);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+            }
+            .navbar-menu.open { left: 0; }
+            .menu-toggle { display: flex; }
+            .hero { padding: 100px 20px 60px; }
+            .hero-astronaut img { height: 110px; }
+            .hero-stats { gap: 28px; }
+            .pain-grid,
+            .services-grid,
+            .imagine-visual,
+            .investment-features { grid-template-columns: 1fr; }
+            .imagine-card:first-child { grid-column: span 1; }
+            .impact-stats { grid-template-columns: repeat(2, 1fr); }
+            .testimonials-track { grid-template-columns: 1fr; }
+            .process-steps { grid-template-columns: 1fr; }
+            .urgency-inner { padding: 36px 24px; }
+            .section-pad { padding: 72px 0; }
+        }
+        @media (max-width: 480px) {
+            .impact-stats { grid-template-columns: 1fr; }
+            .hero-buttons { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<!-- ── NAVBAR ── -->
+<nav class="navbar" id="navbar">
+    <a href="#inicio" class="navbar-logo">
+        <span class="navbar-logo-text">Crecer<span>Mas</span>.Agency</span>
+    </a>
+    <div class="menu-toggle" id="menuToggle">
+        <span></span><span></span><span></span>
+    </div>
+    <ul class="navbar-menu" id="navMenu">
+        <li><a href="#dolores">Problemas</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#proceso">Proceso</a></li>
+        <li><a href="#testimonios">Casos</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20automatizar%20mi%20negocio%20con%20IA" target="_blank" class="navbar-cta">Hablar con un experto</a></li>
+    </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero" id="inicio">
+    <video class="hero-video" autoplay muted loop playsinline>
+        <source src="videohome.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <div class="hero-badge reveal">Agencia de Automatización e IA</div>
+        <h1 class="reveal">
+            Tu negocio vendiendo y<br>
+            <span class="highlight-blue">atendiendo clientes</span><br>
+            las <span class="highlight-yellow">24 horas</span>
+        </h1>
+        <p class="hero-sub reveal">Sistemas de automatización con inteligencia artificial que atraen, califican y convierten leads. Incluso cuando dormís.</p>
+        <div class="hero-buttons reveal">
+            <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20automatizar%20mi%20negocio%20con%20IA" target="_blank" class="btn-primary">Automatizá tu negocio hoy →</a>
+            <a href="#servicios" class="btn-secondary">Ver servicios</a>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PAIN POINTS ── -->
+<section class="pain-section" id="dolores">
+    <div class="container">
+        <div class="pain-header">
+            <span class="section-label reveal">Antes de empezar</span>
+            <h2 class="section-title reveal">¿Te reconocés en alguno<br>de estos <span class="accent-yellow">problemas</span>?</h2>
+            <p class="section-desc reveal" style="margin: 14px auto 0;">Si es así, no estás solo. Son los mismos desafíos que tenían nuestros clientes antes de trabajar con nosotros.</p>
+        </div>
+        <div class="pain-grid">
+            <div class="pain-card reveal">
+                <span class="pain-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16 16-4-4-4 4"/><path d="m12 12v8"/><path d="m8 8c.5-1 1.5-2 3-2 1.5 0 2 1 2 2 0 1-.5 1-1 2-1 1-1 2-1 3"/></svg></span>
+                <h3>Perdés leads calificados</h3>
+                <p>No respondés lo suficientemente rápido y el potencial cliente ya eligió a tu competidor.</p>
+            </div>
+            <div class="pain-card reveal">
+                <span class="pain-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21h10"/><path d="M12 21V7"/><path d="m7 12 5-5 5 5"/></svg></span>
+                <h3>Todo cae sobre tus hombros</h3>
+                <p>Ventas, atención, seguimiento y entrega. Tu negocio depende únicamente de vos.</p>
+            </div>
+            <div class="pain-card reveal">
+                <span class="pain-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01"/><path d="M18 12h.01"/></svg></span>
+                <h3>Gastás en ads sin resultados</h3>
+                <p>Invertís en publicidad pero no ves conversiones consistentes ni ROI claro.</p>
+            </div>
+            <div class="pain-card reveal">
+                <span class="pain-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 10h.01"/><path d="M15 10h.01"/><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z"/></svg></span>
+                <h3>Los leads te fantasmean</h3>
+                <p>Contactan una vez y desaparecen. No tenés sistema para hacer seguimiento automático.</p>
+            </div>
+            <div class="pain-card reveal">
+                <span class="pain-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 17 6-6 4 4 8-8"/><path d="M17 7h4v4"/></svg></span>
+                <h3>Marca débil y poca visibilidad</h3>
+                <p>Tus competidores dominan las búsquedas y las redes mientras vos quedás invisible.</p>
+            </div>
+            <div class="pain-card reveal">
+                <span class="pain-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></span>
+                <h3>Desorganización total</h3>
+                <p>Marketing, ventas y atención no están alineados. Se pierden oportunidades todos los días.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── METHODOLOGY ── -->
+<section class="methodology" id="metodologia">
+    <div class="container">
+        <div class="methodology-inner">
+            <div class="method-visual reveal-left">
+                <img src="imagen/logo2.png" alt="Metodología" class="method-img">
+            </div>
+            <div class="reveal-right">
+                <span class="section-label">Nuestra propuesta</span>
+                <h2 class="section-title">Metodología <span class="accent-cyan">CM+</span></h2>
+                <p class="section-desc">Tu negocio a tu ritmo. Un sistema que crea, conecta y convierte de forma automática — sin depender de vos para cada paso.</p>
+                <div class="method-steps">
+                    <div class="method-step">
+                        <div class="method-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+                        <div class="method-step-text">
+                            <h4>Auditoría y diagnóstico</h4>
+                            <p>Analizamos tu proceso actual e identificamos dónde perdés dinero y tiempo.</p>
+                        </div>
+                    </div>
+                    <div class="method-step">
+                        <div class="method-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .52 8.105V19a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-1a4 4 0 0 0 .52-8.105 4 4 0 0 0-2.526-5.77A3 3 0 1 0 12 5Z"/><path d="M9 13v.01"/><path d="M15 13v.01"/><path d="M12 17v.01"/></svg></div>
+                        <div class="method-step-text">
+                            <h4>Diseño del sistema de IA</h4>
+                            <p>Construimos un ecosistema a medida con bots, CRM y campañas integradas.</p>
+                        </div>
+                    </div>
+                    <div class="method-step">
+                        <div class="method-step-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.5-1 1-4c2 0 3 .5 3 .5l1 3.5Z"/><path d="M12 15v5s1-.5 4-1c0-2-.5-3-.5-3L12 15Z"/></svg></div>
+                        <div class="method-step-text">
+                            <h4>Activación y escala</h4>
+                            <p>Lanzamos, medimos y optimizamos continuamente. Vos solo ves los resultados.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:32px;">
+                    <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20conocer%20la%20metodolog%C3%ADa%20CM%2B" target="_blank" class="btn-primary">Quiero conocer más →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── IMAGINE ── -->
+<section class="imagine-section">
+    <div class="container">
+        <div class="imagine-inner">
+            <div class="reveal-left">
+                <span class="section-label">La tranquilidad que merecés</span>
+                <div class="imagine-text">
+                    <p class="big-quote">Imaginá contar con un equipo listo para actuar <em>sin demoras ni presupuestos adicionales</em> cada vez que llegue un lead.</p>
+                </div>
+                <p style="color: rgba(255,255,255,0.6); font-size:0.95rem; margin-bottom:28px; line-height:1.7;">Cada mes, un único abono cubre todo lo que necesitás para atraer, atender y convertir clientes de forma automática e inteligente.</p>
+                <ul class="imagine-list">
+                    <li><span>Bots de <strong>WhatsApp e Instagram</strong> activos 24/7</span></li>
+                    <li><span><strong>Campañas de Meta y Google Ads</strong> gestionadas para vos</span></li>
+                    <li><span><strong>CRM conectado</strong> que organiza tus leads solo</span></li>
+                    <li><span>Flujos de <strong>email y seguimiento automático</strong></span></li>
+                    <li><span><strong>Dashboards en tiempo real</strong> con tus métricas clave</span></li>
+                    <li><span>Estrategia y <strong>consultoría mensual incluida</strong></span></li>
+                </ul>
+            </div>
+            <div class="imagine-visual reveal-right">
+                <div class="imagine-card">
+                    <div class="imagine-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                    <h4>Sistema Completo de Automatización</h4>
+                    <p>Todo integrado: captación, atención, conversión y análisis.</p>
+                </div>
+                <div class="imagine-card">
+                    <div class="imagine-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>
+                    <h4>IA Conversacional</h4>
+                    <p>Bots que entienden y responden como un humano.</p>
+                </div>
+                <div class="imagine-card">
+                    <div class="imagine-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
+                    <h4>Reportes Automáticos</h4>
+                    <p>Datos en tiempo real, sin trabajo extra.</p>
+                </div>
+                <div class="imagine-card">
+                    <div class="imagine-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+                    <h4>Ads de Alta Conversión</h4>
+                    <p>Cada peso invertido genera leads reales.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SERVICES ── -->
+<section class="services-section" id="servicios">
+    <div class="container">
+        <div class="services-header">
+            <span class="section-label reveal">Lo que hacemos</span>
+            <h2 class="section-title reveal">Servicios que <span class="accent-cyan">transforman</span><br>tu negocio</h2>
+            <p class="section-desc reveal" style="margin: 14px auto 0;">Un equipo completo de automatización, marketing y tecnología trabajando para vos.</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M12 8V4H8"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>
+                <h3>Automatización WhatsApp & Instagram</h3>
+                <p>Bots con IA que responden, califican leads y agendan citas automáticamente. Atención perfecta sin depender de vos.</p>
+                <span class="service-tag">IA Conversacional</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
+                <h3>Campañas Meta Ads & Google Ads</h3>
+                <p>Estrategias publicitarias enfocadas en conversión real. Invertís en leads calificados, no en alcance vacío.</p>
+                <span class="service-tag">Performance</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+                <h3>Integración de CRM</h3>
+                <p>Conectamos HubSpot, Kommo, Brevo o NocoDB con todos tus canales. Leads organizados solos, sin trabajo manual.</p>
+                <span class="service-tag">Automatización</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+                <h3>Email Marketing Automatizado</h3>
+                <p>Flujos que nutren leads según su comportamiento y convierten en el momento justo. Totalmente automatizados.</p>
+                <span class="service-tag">Nurturing</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+                <h3>Dashboards & Reportes</h3>
+                <p>Paneles en tiempo real conectados a Google Sheets y Looker Studio. Decisiones basadas en datos reales.</p>
+                <span class="service-tag">Analytics</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+                <h3>Bots Multicanal con IA</h3>
+                <p>Un único sistema que atiende por WhatsApp, Instagram y web al mismo tiempo. Conversaciones naturales.</p>
+                <span class="service-tag">Omnicanal</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x1="16" y1="21" y2="21"/><line x1="12" x1="12" y1="17" y2="21"/></svg></div>
+                <h3>Landing Pages de Alta Conversión</h3>
+                <p>Páginas diseñadas para captar leads e integradas con tus automatizaciones desde el primer día.</p>
+                <span class="service-tag">Diseño Web</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" x1="12" y1="22.08" y2="12"/></svg></div>
+                <h3>Gestión & Segmentación de Leads</h3>
+                <p>Clasificamos automáticamente cada contacto. Tu equipo solo habla con quien está listo para comprar.</p>
+                <span class="service-tag">Lead Scoring</span>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-icon-wrap"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg></div>
+                <h3>Consultoría en IA & Eficiencia</h3>
+                <p>Te ayudamos a identificar qué automatizar primero para ahorrar tiempo y reducir costos operativos.</p>
+                <span class="service-tag">Estrategia</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── IMPACT ── -->
+<section class="impact-section" id="impacto">
+    <div class="container">
+        <div class="impact-header">
+            <span class="section-label reveal" style="text-align:center; display:block;">Resultados reales</span>
+            <h2 class="big-statement reveal">
+                Nos enfocamos en lo que genera<br>
+                <span class="highlight">IMPACTO REAL</span>
+            </h2>
+            <p style="color:rgba(255,255,255,0.55); text-align:center; margin-top:14px; font-size:0.95rem;" class="reveal">Con datos reales de empresas que ya implementaron nuestra Metodología CM+</p>
+        </div>
+        <div class="impact-stats">
+            <div class="impact-stat reveal">
+                <span class="impact-stat-number">+300%</span>
+                <div class="impact-stat-desc">Aumento en respuesta a leads en las primeras 48hs</div>
+            </div>
+            <div class="impact-stat reveal">
+                <span class="impact-stat-number">-68%</span>
+                <div class="impact-stat-desc">Reducción de tareas manuales repetitivas</div>
+            </div>
+            <div class="impact-stat reveal">
+                <span class="impact-stat-number">3.2x</span>
+                <div class="impact-stat-desc">ROI promedio en los primeros 90 días</div>
+            </div>
+            <div class="impact-stat reveal">
+                <span class="impact-stat-number">24/7</span>
+                <div class="impact-stat-desc">Atención automática sin intervención humana</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PROCESS ── -->
+<section style="padding:100px 0; background:var(--dark2);" id="proceso">
+    <div class="container">
+        <div style="text-align:center; margin-bottom:64px;">
+            <span class="section-label reveal">Cómo trabajamos</span>
+            <h2 class="section-title reveal">Tu camino al <span class="accent-cyan">sistema automatizado</span></h2>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px;" class="process-steps-grid">
+            <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:32px 24px; position:relative; overflow:hidden; transition:all 0.3s;" class="reveal process-step-card">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--blue), var(--cyan));"></div>
+                <div style="font-size:3rem; font-weight:900; color:var(--yellow); margin-bottom:12px; line-height:1;">01</div>
+                <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:10px;">Auditoría de tu negocio</h3>
+                <p style="font-size:0.86rem; color:rgba(255,255,255,0.55); line-height:1.65;">Analizamos tu proceso actual, identificamos pérdidas y oportunidades de automatización con impacto real.</p>
+            </div>
+            <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:32px 24px; position:relative; overflow:hidden; transition:all 0.3s;" class="reveal process-step-card">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--blue), var(--cyan));"></div>
+                <div style="font-size:3rem; font-weight:900; color:var(--yellow); margin-bottom:12px; line-height:1;">02</div>
+                <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:10px;">Diseño de estrategia</h3>
+                <p style="font-size:0.86rem; color:rgba(255,255,255,0.55); line-height:1.65;">Investigamos tu mercado y audiencia para diseñar un sistema que te diferencie y genere conversiones consistentes.</p>
+            </div>
+            <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:32px 24px; position:relative; overflow:hidden; transition:all 0.3s;" class="reveal process-step-card">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--blue), var(--cyan));"></div>
+                <div style="font-size:3rem; font-weight:900; color:var(--yellow); margin-bottom:12px; line-height:1;">03</div>
+                <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:10px;">Configuración de sistemas</h3>
+                <p style="font-size:0.86rem; color:rgba(255,255,255,0.55); line-height:1.65;">Implementamos y conectamos CRM, bots, automatizaciones y campañas para que funcionen como una máquina.</p>
+            </div>
+            <div style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:20px; padding:32px 24px; position:relative; overflow:hidden; transition:all 0.3s;" class="reveal process-step-card">
+                <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg, var(--blue), var(--cyan));"></div>
+                <div style="font-size:3rem; font-weight:900; color:var(--yellow); margin-bottom:12px; line-height:1;">04</div>
+                <h3 style="font-size:1.05rem; font-weight:700; margin-bottom:10px;">Lanzamiento y escala</h3>
+                <p style="font-size:0.86rem; color:rgba(255,255,255,0.55); line-height:1.65;">Activamos el sistema, te capacitamos y optimizamos continuamente para escalar tus resultados mes a mes.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.process-steps-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; }
+.process-step-card:hover { transform: translateY(-5px); border-color: rgba(0,180,255,0.4); }
+@media (max-width: 1024px) { .process-steps-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 600px) { .process-steps-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="divider"></div>
+
+<!-- ── TESTIMONIALS ── -->
+<section class="testimonials-section" id="testimonios">
+    <div class="container">
+        <div class="testimonials-header">
+            <span class="section-label reveal">Lo que dicen</span>
+            <h2 class="section-title reveal">Empresas que ya probaron<br>la <span class="accent-cyan">Metodología CM+</span></h2>
+        </div>
+        <div class="testimonials-track">
+            <div class="testimonial-card reveal">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Implementaron el bot de WhatsApp en 2 semanas. Ahora respondo 3 veces más leads de los que antes podía atender manualmente. Las ventas subieron 40% el primer mes."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">MR</div>
+                    <div>
+                        <div class="author-name">Martín Rodríguez</div>
+                        <div class="author-role">Dueño de Inmobiliaria — Buenos Aires</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card reveal">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Antes gastaba fortunas en ads sin entender qué pasaba. Ahora tengo un dashboard en tiempo real y sé exactamente qué campaña convierte y cuánto me cuesta cada cliente."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">CL</div>
+                    <div>
+                        <div class="author-name">Carolina López</div>
+                        <div class="author-role">CEO de Estudio de Yoga — Córdoba</div>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card reveal">
+                <div class="testimonial-stars">★★★★★</div>
+                <p class="testimonial-text">"Lo mejor fue que no tuve que hacer nada técnico. Ellos configuraron todo el CRM con el bot y las campañas. En un mes mi equipo de ventas solo habla con leads listos para comprar."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">JP</div>
+                    <div>
+                        <div class="author-name">Javier Pérez</div>
+                        <div class="author-role">Director Comercial — Empresa de Servicios</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── INVESTMENT / WHY US ── -->
+<section class="investment-section" id="inversion">
+    <div class="container">
+        <div class="investment-inner">
+            <div class="reveal-left">
+                <span class="section-label">Invertí con inteligencia</span>
+                <div class="investment-text">
+                    <h2>Invertí en acciones que<br><em>transforman tu empresa</em></h2>
+                    <p>Tenemos experiencia real en tu industria. Colaboramos con empresas de servicios, inmobiliarias, educación y comercio electrónico para diseñar y ejecutar estrategias que optimizan sus procesos y resultados.</p>
+                </div>
+                <div class="investment-features">
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Sin costos ocultos</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Resultados medibles</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Implementación rápida</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Soporte mensual incluido</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Estrategia personalizada</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Escalable con tu negocio</span></div>
+                </div>
+                <div style="margin-top:32px;">
+                    <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20una%20cotizaci%C3%B3n" target="_blank" class="btn-primary">Pedir cotización →</a>
+                </div>
+            </div>
+            <div class="investment-visual reveal-right">
+                <h3>Plan CM+ Todo incluido</h3>
+                <p class="tag-line">Un único abono mensual. Sin sorpresas.</p>
+                <div class="price-box">
+                    <div class="price-label">Consultar precio</div>
+                    <div class="price-main">Personalizado</div>
+                    <div class="price-sub">según tu negocio y objetivos</div>
+                </div>
+                <div style="text-align:left; display:flex; flex-direction:column; gap:10px;">
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Bots de IA multicanal</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Gestión de Meta + Google Ads</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>CRM + Email automation</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Dashboard & reportes</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Consultoría estratégica</span></div>
+                    <div class="inv-feature"><div class="inv-feature-dot"></div><span>Soporte prioritario</span></div>
+                </div>
+                <div style="margin-top:28px;">
+                    <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20saber%20m%C3%A1s%20del%20Plan%20CM%2B" target="_blank" class="btn-primary" style="width:100%; text-align:center; display:block;">Quiero este plan →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── WHY US ── -->
+<section class="whyus-section">
+    <div class="container">
+        <div class="whyus-header">
+            <span class="section-label reveal">Por qué elegirnos</span>
+            <h2 class="section-title reveal">¿Por qué <span class="accent-cyan">CrecerMas.Agency</span>?</h2>
+            <p class="section-desc reveal" style="margin: 14px auto 0;">No somos una agencia más. Somos especialistas en automatización e IA aplicada a ventas reales.</p>
+        </div>
+        <div class="whyus-grid">
+            <div class="whyus-card reveal">
+                <div class="whyus-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15l-3-3 3-3"/><path d="m15 12-3 3-3-3"/><path d="M22 10v4"/><path d="M2 10v4"/><path d="M12 2a10 10 0 0 1 10 10v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8A10 10 0 0 1 12 2z"/></svg></div>
+                <div>
+                    <h4>Equipo certificado en IA</h4>
+                    <p>Especialistas en las principales plataformas de automatización, CRM y modelos de lenguaje natural de última generación.</p>
+                </div>
+            </div>
+            <div class="whyus-card reveal">
+                <div class="whyus-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                <div>
+                    <h4>Implementación en semanas, no meses</h4>
+                    <p>Un bot básico en 1-2 semanas. Un sistema completo en 3-6 semanas. Sin burocracia, sin demoras innecesarias.</p>
+                </div>
+            </div>
+            <div class="whyus-card reveal">
+                <div class="whyus-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div>
+                <div>
+                    <h4>Metodología probada y medible</h4>
+                    <p>Cada acción tiene métricas claras. Sabés exactamente qué genera resultados y cuánto retorna cada peso invertido.</p>
+                </div>
+            </div>
+            <div class="whyus-card reveal">
+                <div class="whyus-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+                <div>
+                    <h4>Sistema escalable desde el día 1</h4>
+                    <p>Diseñamos para el futuro. A medida que crecés, el sistema crece con vos sin empezar desde cero.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FAQ ── -->
+<section class="faq-section" id="faq">
+    <div class="container">
+        <div class="faq-header">
+            <span class="section-label reveal">Preguntas frecuentes</span>
+            <h2 class="section-title reveal">Lo que nos preguntan <span class="accent-yellow">seguido</span></h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item reveal">
+                <div class="faq-q">¿Qué necesito para empezar con un bot automatizado?<span class="faq-toggle">+</span></div>
+                <div class="faq-a">Solo necesitás una cuenta de WhatsApp Business o Instagram Business activa. Nosotros nos encargamos de toda la configuración técnica, integración con tu CRM y entrenamiento del bot con IA.</div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q">¿Pueden integrar con mi CRM o WhatsApp actual?<span class="faq-toggle">+</span></div>
+                <div class="faq-a">¡Absolutamente! Trabajamos con HubSpot, Kommo, Brevo, NocoDB y muchos otros CRM. También integramos con tu WhatsApp Business API actual. Si usás otra herramienta, revisamos la compatibilidad en la consultoría inicial.</div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q">¿Los bots usan IA real o respuestas predefinidas?<span class="faq-toggle">+</span></div>
+                <div class="faq-a">Usamos IA conversacional real con modelos avanzados de lenguaje natural. Los bots entienden el contexto, responden naturalmente y aprenden de cada interacción. No son simples árboles de decisión.</div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q">¿Cuánto tarda en implementarse?<span class="faq-toggle">+</span></div>
+                <div class="faq-a">Un bot básico de WhatsApp puede estar listo en 1-2 semanas. Un sistema completo con CRM, múltiples canales y automatizaciones avanzadas suele tomar entre 3 y 6 semanas según la complejidad.</div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q">¿Solo sirve para empresas grandes?<span class="faq-toggle">+</span></div>
+                <div class="faq-a">No. Trabajamos con pymes, emprendedores y empresas medianas. Los sistemas que diseñamos se adaptan a cada escala y al ritmo de crecimiento de cada negocio. Empezás chico y escalás sin límites.</div>
+            </div>
+            <div class="faq-item reveal">
+                <div class="faq-q">¿Qué pasa si mi negocio crece?<span class="faq-toggle">+</span></div>
+                <div class="faq-a">Diseñamos sistemas escalables desde el inicio. A medida que crecés, agregamos más canales, automatizaciones e integraciones sin tener que empezar de cero. El sistema evoluciona con vos.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── URGENCY ── -->
+<section class="urgency-section">
+    <div class="container">
+        <div class="urgency-inner reveal">
+            <div class="urgency-badge">Cupos limitados</div>
+            <h2>Trabajamos con<br>cupos <span style="color:var(--yellow)">limitados</span></h2>
+            <p>Para garantizar la calidad y atención personalizada que cada cliente merece, solo aceptamos un número limitado de proyectos por mes. No queremos volumen. Queremos resultados.</p>
+            <div class="urgency-spots">
+                <div class="spot taken"></div>
+                <div class="spot taken"></div>
+                <div class="spot taken"></div>
+                <div class="spot taken"></div>
+                <div class="spot last"></div>
+                <div class="spot"></div>
+                <div class="spot"></div>
+                <div class="spot"></div>
+                <div class="spot"></div>
+                <div class="spot"></div>
+            </div>
+            <p style="font-size:0.82rem; color:rgba(255,215,0,0.7); margin-bottom:28px; font-weight:600;">⚡ Quedan pocos cupos disponibles este mes</p>
+            <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20reservar%20mi%20lugar%20en%20CrecerMas" target="_blank" class="btn-primary">Reservar mi lugar ahora →</a>
+        </div>
+    </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="final-cta" id="contacto">
+    <div class="container">
+        <span class="section-label reveal" style="display:block; text-align:center;">El siguiente paso es tuyo</span>
+        <h2 class="reveal">¿Querés que <em>nosotros nos ocupemos</em> de automatizar tu negocio para que te enfoques en lo que importa?</h2>
+        <p class="reveal">Nada de reuniones interminables. Nada de presupuestos que nunca terminan. Solo resultados reales desde el primer mes.</p>
+        <div class="reveal">
+            <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20automatizar%20mi%20negocio%20con%20IA" target="_blank" class="btn-primary" style="font-size:1.05rem; padding:18px 48px;">Hablemos por WhatsApp →</a>
+        </div>
+        <div class="final-cta-logo reveal">
+        </div>
+    </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+    <div class="footer-inner">
+        <a href="#inicio" class="footer-logo">
+            <span class="footer-logo-text">Crecer<span>Mas</span>.Agency</span>
+        </a>
+        <p class="footer-tagline">Tu estrategia en manos de expertos en Automatización e IA</p>
+        <p class="footer-cert">© 2025 CrecerMas.Agency · Automatización con IA · Todos los derechos reservados</p>
+    </div>
+</footer>
+
+<!-- ── WHATSAPP FLOAT ── -->
+<a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20automatizar%20mi%20negocio%20con%20IA" class="wa-float" target="_blank" aria-label="WhatsApp">
+    <svg viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825.737 5.607 2.137 8.048L0 32l7.933-2.127A15.95 15.95 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.467a13.4 13.4 0 01-7.07-1.87l-.507-.292-5.155 1.383 1.38-5.128-.32-.524A13.36 13.36 0 012.667 16C2.667 8.616 8.67 2.613 16.054 2.613c7.384 0 13.387 6.003 13.387 13.387 0 7.384-6.003 13.387-13.387 13.387zm7.373-9.964c-.317-.159-1.866-.921-2.155-1.026-.289-.105-.499-.159-.709.159s-.815 1.026-.999 1.236c-.184.21-.367.237-.684.079-1.866-.933-3.088-1.663-4.314-3.771-.323-.555.323-.516.923-1.719.1-.21.05-.394-.025-.554-.075-.159-.709-1.709-.971-2.34-.256-.615-.517-.531-.709-.541-.184-.009-.394-.011-.604-.011s-.554.079-.844.394c-.289.316-1.105 1.078-1.105 2.628s1.131 3.049 1.289 3.259c.159.21 2.237 3.417 5.417 4.794 2.006.869 2.799.934 3.802.788.617-.091 1.866-.763 2.128-1.5.262-.737.262-1.368.184-1.5-.079-.132-.289-.21-.604-.368z"/>
+    </svg>
+</a>
+
+<script>
+// ── PARTICLES
+(function() {
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, particles = [];
+    const N = 60;
+
+    function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    for (let i = 0; i < N; i++) {
+        particles.push({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.5 + 0.3,
+            dx: (Math.random() - 0.5) * 0.3,
+            dy: (Math.random() - 0.5) * 0.3,
+            o: Math.random() * 0.5 + 0.1
+        });
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+            p.x += p.dx; p.y += p.dy;
+            if (p.x < 0) p.x = W;
+            if (p.x > W) p.x = 0;
+            if (p.y < 0) p.y = H;
+            if (p.y > H) p.y = 0;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(0,180,255,${p.o})`;
+            ctx.fill();
+        });
+        // lines between close particles
+        for (let i = 0; i < N; i++) {
+            for (let j = i + 1; j < N; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const d = Math.sqrt(dx * dx + dy * dy);
+                if (d < 120) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(0,87,184,${0.12 * (1 - d / 120)})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(draw);
+    }
+    draw();
+})();
+
+// ── SCROLL REVEAL
+(function() {
+    const els = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                observer.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.12 });
+    els.forEach(el => observer.observe(el));
+})();
+
+// ── NAVBAR SCROLL
+window.addEventListener('scroll', function() {
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ── MOBILE MENU
+document.getElementById('menuToggle').addEventListener('click', function() {
+    document.getElementById('navMenu').classList.toggle('open');
+});
+document.querySelectorAll('#navMenu a').forEach(a => {
+    a.addEventListener('click', () => document.getElementById('navMenu').classList.remove('open'));
+});
+
+// ── FAQ
+document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', function() {
+        const item = this.parentElement;
+        const isActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
+    });
+});
+
+// ── SMOOTH ANCHOR SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
+
+// ── COUNTER ANIMATION
+function animateCounter(el, target, suffix) {
+    let start = 0;
+    const duration = 1800;
+    const step = (timestamp) => {
+        if (!start) start = timestamp;
+        const progress = Math.min((timestamp - start) / duration, 1);
+        const val = Math.floor(progress * target);
+        el.textContent = (suffix === '%' && val > 0 ? (el.dataset.prefix || '') + val + suffix : (el.dataset.prefix || '') + val + suffix);
+        if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+}
+
+const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            statObserver.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.5 });
+document.querySelectorAll('.impact-stat-number').forEach(el => statObserver.observe(el));
+</script>
+</body>
+</html>
