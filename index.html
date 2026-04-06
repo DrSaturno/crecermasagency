@@ -694,7 +694,6 @@
         }
         @media (max-width: 768px) {
             .impact-stats { grid-template-columns: 1fr !important; max-width: 340px; margin: 0 auto; }
-            .wa-float { bottom: 90px; }
         }
         .impact-stat {
             text-align: center;
@@ -1323,7 +1322,17 @@
             .urgency-inner { padding: 32px 16px; }
 
             /* ── Investment visual ── */
-            .investment-visual { padding: 28px 20px; }
+            .investment-visual {
+                padding: 24px 16px;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+                overflow: hidden;
+            }
+            .investment-section .container {
+                padding: 0 16px;
+                overflow: hidden;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1405,35 +1414,46 @@
                 position: fixed;
                 bottom: 0; left: 0; right: 0;
                 z-index: 9000;
-                padding: 12px 16px 20px;
-                background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.95) 30%);
-                backdrop-filter: blur(8px);
-                justify-content: center;
+                padding: 10px 16px 18px;
+                background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.96) 25%);
+                backdrop-filter: blur(10px);
+                align-items: center;
+                justify-content: flex-start;
+                gap: 10px;
                 transform: translateY(100%);
                 transition: transform 0.4s ease;
             }
             .sticky-cta.visible {
                 transform: translateY(0);
             }
+            /* wa-float sits right of the CTA bar */
+            .wa-float {
+                bottom: 18px !important;
+                right: 14px !important;
+                width: 52px !important;
+                height: 52px !important;
+                z-index: 9500 !important;
+            }
             .sticky-cta a {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 10px;
-                width: 100%;
-                max-width: 400px;
-                padding: 16px 24px;
+                gap: 8px;
+                width: calc(100% - 72px);
+                padding: 15px 16px;
                 background: linear-gradient(135deg, var(--blue), var(--cyan));
                 color: white;
                 font-weight: 700;
-                font-size: 1rem;
+                font-size: 0.95rem;
                 border-radius: 14px;
                 text-decoration: none;
                 box-shadow: 0 4px 24px rgba(0,87,184,0.5);
-                letter-spacing: 0.2px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
             .sticky-cta a svg {
-                width: 20px; height: 20px;
+                width: 18px; height: 18px;
                 fill: white;
                 flex-shrink: 0;
             }
@@ -1468,7 +1488,7 @@
 <div class="sticky-cta" id="stickyCta">
     <a href="https://api.whatsapp.com/send?phone=5491138436394&text=Hola,%20quiero%20automatizar%20mi%20negocio%20con%20IA" target="_blank">
         <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 0c-8.837 0-16 7.163-16 16 0 2.825.737 5.607 2.137 8.048L0 32l7.933-2.127A15.95 15.95 0 0016 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm7.373 19.503c-.317-.159-1.866-.921-2.155-1.026-.289-.105-.499-.159-.709.159s-.815 1.026-.999 1.236c-.184.21-.367.237-.684.079-1.866-.933-3.088-1.663-4.314-3.771-.323-.555.323-.516.923-1.719.1-.21.05-.394-.025-.554-.075-.159-.709-1.709-.971-2.34-.256-.615-.517-.531-.709-.541-.184-.009-.394-.011-.604-.011s-.554.079-.844.394c-.289.316-1.105 1.078-1.105 2.628s1.131 3.049 1.289 3.259c.159.21 2.237 3.417 5.417 4.794 2.006.869 2.799.934 3.802.788.617-.091 1.866-.763 2.128-1.5.262-.737.262-1.368.184-1.5-.079-.132-.289-.21-.604-.368z"/></svg>
-        Hablá con un experto ahora
+        Hablá con un experto
     </a>
 </div>
 
