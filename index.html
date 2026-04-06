@@ -1327,10 +1327,10 @@
 
 <!-- ── HERO ── -->
 <section class="hero" id="inicio">
-    <video class="hero-video hero-video-desktop" autoplay muted loop playsinline>
+    <video id="videoDesktop" class="hero-video hero-video-desktop" autoplay muted loop playsinline preload="auto">
         <source src="videohome.mp4" type="video/mp4">
     </video>
-    <video class="hero-video hero-video-mobile" autoplay muted loop playsinline>
+    <video id="videoMobile" class="hero-video hero-video-mobile" autoplay muted loop playsinline preload="auto">
         <source src="videovertical.mp4" type="video/mp4">
     </video>
     <div class="hero-overlay"></div>
@@ -1877,6 +1877,41 @@
 </a>
 
 <script>
+// ── VIDEO RESPONSIVE
+(function() {
+    var vd = document.getElementById('videoDesktop');
+    var vm = document.getElementById('videoMobile');
+    var isMobile = window.innerWidth <= 768;
+
+    if (isMobile) {
+        // Pause desktop, ensure mobile plays
+        vd.pause();
+        vd.removeAttribute('autoplay');
+        vm.muted = true;
+        vm.load();
+        vm.play().catch(function(){});
+    } else {
+        vm.pause();
+        vm.removeAttribute('autoplay');
+        vd.muted = true;
+        vd.load();
+        vd.play().catch(function(){});
+    }
+
+    window.addEventListener('resize', function() {
+        var mobile = window.innerWidth <= 768;
+        if (mobile) {
+            vd.pause();
+            vm.muted = true;
+            vm.play().catch(function(){});
+        } else {
+            vm.pause();
+            vd.muted = true;
+            vd.play().catch(function(){});
+        }
+    });
+})();
+
 // ── PARTICLES
 (function() {
     const canvas = document.getElementById('particles-canvas');
