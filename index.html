@@ -794,30 +794,45 @@
         /* ── INVESTMENT / CTA MID ── */
         .investment-section {
             padding: 100px 0;
-            background: linear-gradient(135deg, rgba(0,87,184,0.2), rgba(0,180,255,0.1), rgba(0,0,0,0));
-            border-top: 1px solid rgba(0,180,255,0.15);
-            border-bottom: 1px solid rgba(0,180,255,0.15);
+            background: linear-gradient(135deg, #C8860A 0%, #FFD700 40%, #FFF176 70%, #F5A623 100%);
+            border-top: none;
+            border-bottom: none;
+            position: relative;
+            overflow: hidden;
+        }
+        .investment-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 60% 80% at 80% 50%, rgba(255,255,255,0.12) 0%, transparent 70%);
+            pointer-events: none;
         }
         .investment-inner {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 80px;
             align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        .investment-text .section-label {
+            color: rgba(0,0,0,0.5) !important;
         }
         .investment-text h2 {
             font-size: clamp(1.8rem, 3vw, 2.5rem);
-            font-weight: 800;
+            font-weight: 900;
             line-height: 1.2;
             letter-spacing: -0.5px;
             margin-bottom: 20px;
+            color: #000;
         }
         .investment-text h2 em {
             font-style: normal;
-            color: var(--yellow);
+            color: #0057B8;
         }
         .investment-text p {
             font-size: 1rem;
-            color: rgba(255,255,255,0.65);
+            color: rgba(0,0,0,0.65);
             line-height: 1.7;
             margin-bottom: 32px;
         }
@@ -831,35 +846,47 @@
             align-items: center;
             gap: 10px;
             font-size: 0.88rem;
-            color: rgba(255,255,255,0.75);
+            color: rgba(0,0,0,0.8);
+            font-weight: 500;
         }
         .inv-feature-dot {
             width: 8px;
             height: 8px;
-            background: var(--cyan);
+            background: #0057B8;
             border-radius: 50%;
             flex-shrink: 0;
         }
+        .investment-section .btn-primary {
+            background: #0057B8;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+            color: #fff;
+        }
+        .investment-section .btn-primary:hover {
+            background: #003d8a;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+        }
         .investment-visual {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
+            background: rgba(0,0,0,0.85);
+            border: 1px solid rgba(255,255,255,0.12);
             border-radius: 24px;
             padding: 40px;
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(24px);
             text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         .investment-visual h3 {
             font-size: 1.3rem;
             font-weight: 800;
             margin-bottom: 8px;
+            color: #fff;
         }
         .investment-visual .tag-line {
             font-size: 0.85rem;
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.45);
             margin-bottom: 28px;
         }
         .investment-visual .price-box {
-            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            background: linear-gradient(135deg, #FFD700, #F5A623);
             border-radius: 16px;
             padding: 24px;
             margin-bottom: 24px;
@@ -868,16 +895,24 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            opacity: 0.8;
+            color: rgba(0,0,0,0.6);
             margin-bottom: 6px;
+            font-weight: 700;
         }
         .price-box .price-main {
             font-size: 2.4rem;
             font-weight: 900;
+            color: #000;
         }
         .price-box .price-sub {
             font-size: 0.8rem;
-            opacity: 0.7;
+            color: rgba(0,0,0,0.55);
+        }
+        .investment-visual .inv-feature {
+            color: rgba(255,255,255,0.75);
+        }
+        .investment-visual .inv-feature-dot {
+            background: #FFD700;
         }
 
         /* ── WHY US ── */
