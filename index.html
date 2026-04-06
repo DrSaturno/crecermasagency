@@ -186,10 +186,6 @@
             opacity: 0.8;
         }
         .hero-video-mobile { display: none; }
-        @media (max-width: 768px) {
-            .hero-video-desktop { display: none; }
-            .hero-video-mobile { display: block; }
-        }
         .hero-overlay {
             position: absolute;
             top: 0; left: 0;
@@ -1327,11 +1323,7 @@
 
 <!-- ── HERO ── -->
 <section class="hero" id="inicio">
-    <video id="videoDesktop" class="hero-video hero-video-desktop" autoplay muted loop playsinline preload="auto">
-        <source src="videohome.mp4" type="video/mp4">
-    </video>
-    <video id="videoMobile" class="hero-video hero-video-mobile" autoplay muted loop playsinline preload="auto">
-        <source src="videovertical.mp4" type="video/mp4">
+    <video id="heroVideo" class="hero-video" autoplay muted loop playsinline preload="auto">
     </video>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -1879,37 +1871,12 @@
 <script>
 // ── VIDEO RESPONSIVE
 (function() {
-    var vd = document.getElementById('videoDesktop');
-    var vm = document.getElementById('videoMobile');
-    var isMobile = window.innerWidth <= 768;
-
-    if (isMobile) {
-        // Pause desktop, ensure mobile plays
-        vd.pause();
-        vd.removeAttribute('autoplay');
-        vm.muted = true;
-        vm.load();
-        vm.play().catch(function(){});
-    } else {
-        vm.pause();
-        vm.removeAttribute('autoplay');
-        vd.muted = true;
-        vd.load();
-        vd.play().catch(function(){});
-    }
-
-    window.addEventListener('resize', function() {
-        var mobile = window.innerWidth <= 768;
-        if (mobile) {
-            vd.pause();
-            vm.muted = true;
-            vm.play().catch(function(){});
-        } else {
-            vm.pause();
-            vd.muted = true;
-            vd.play().catch(function(){});
-        }
-    });
+    var v = document.getElementById('heroVideo');
+    var src = window.innerWidth <= 768 ? 'videovertical.mp4' : 'videohome.mp4';
+    v.setAttribute('src', src);
+    v.muted = true;
+    v.load();
+    v.play().catch(function(){});
 })();
 
 // ── PARTICLES
